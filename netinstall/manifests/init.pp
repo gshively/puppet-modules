@@ -8,14 +8,18 @@
 # [*title*]
 #   url of tarball binary install
 #
+# [*extract_dir*]
+#   directory created after extraction. default based on title by removing
+#   extension
+#
 # [*dest_dir*]
-#   destination where to extract
+#   destination where to extract tarball
 #
 # [*owner*]
-#   owner of the extracted files
+#   owner of the extracted files/directories
 #
 # [*group*]
-#   group of the extracted files
+#   group of the extracted files/directories
 #
 # === Examples
 #
