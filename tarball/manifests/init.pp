@@ -87,22 +87,34 @@ define tarball(
 	if ! $dir       { fail("Must specify 'extract_dir' for '$title'") }
 
 	if $ensure == 'present' {
-		exec {"extract $title -> $target/$dir":
-			command => "curl -Osf $url || exit 1 && $cmd ; rm $title",
-			creates => "$target/$dir",
+
+		exec {"$cmd":
+			command     => "curl -Osf $url || exit 1 && $cmd ; rm $title",
+			creates     => "$target/$dir",
 		}
 
 		exec {"chown -R $owner:$group $target/$dir":
-			command => "chown -R $owner:$group $target/$dir",
+			command     => "chown -R $owner:$group $target/$dir",
 			refreshonly => true,
-			subscribe   => Exec["extract $title -> $target/$dir"],
+			subscribe   => Exec["$cmd"],
 		}
+
+		file {"$target/$dir":
+			owner       => $owner,
+			group       => $group,
+			ensure      => directory,
+			noop        => true,
+			require     => Exec["chown -R $owner:$group $target/$dir"],
+		}
+
 	}
 	else {
+
 		exec{"rm -rf $target/$dir":
 			command     => "rm -rf $dir",
 			unless      => "test -d $dir",
 		}
+
 	}
 	
 }
