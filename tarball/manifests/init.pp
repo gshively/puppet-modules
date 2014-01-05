@@ -76,6 +76,7 @@ define tarball(
 		/(.*)\.tgz$/:     { $cmd  = "tar -xzf $title" $base = $1 }
 		/(.*)\.tar\.gz$/: { $cmd  = "tar -xzf $title" $base = $1 }
 		/(.*)\.tar\.Z$/:  { $cmd  = "tar -xZf $title" $base = $1 }
+		/(.*)\.zip$/:     { $cmd  = "unzip    $title" $base = $1 }
 
 		default:          {
 			$cmd  = "chmod +x $title && ./$title $bin_options"
@@ -89,7 +90,7 @@ define tarball(
 	if $ensure == 'present' {
 
 		exec {"$cmd":
-			command     => "curl -Osf $url || exit 1 && $cmd ; rm $title",
+			command     => "curl -LOsf $url || exit 1 && $cmd ; rm $title",
 			creates     => "$target/$dir",
 		}
 
